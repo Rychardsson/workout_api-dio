@@ -1,5 +1,6 @@
 from typing import Annotated, Optional
 from pydantic import Field, PositiveFloat, BaseModel
+from datetime import datetime
 from workout_api.categorias.schemas import CategoriaSimpleOut
 from workout_api.centro_treinamento.schemas import CentroTreinamentoSimpleOut
 
@@ -17,6 +18,7 @@ class AtletaIn(BaseModel):
 
 class AtletaOut(AtletaIn):
     id: Annotated[int, Field(description='Identificador do atleta')]
+    created_at: Annotated[datetime, Field(description='Data de criação do atleta')]
 
 
 class AtletaUpdate(BaseModel):
