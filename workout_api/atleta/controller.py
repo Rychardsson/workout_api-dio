@@ -25,6 +25,30 @@ router = APIRouter()
     summary='Criar um novo atleta',
     status_code=status.HTTP_201_CREATED,
     response_model=AtletaOut,
+    description="""
+    Cria um novo atleta no sistema.
+    
+    **Validações:**
+    - CPF deve ser válido (11 dígitos numéricos com validação de dígitos verificadores)
+    - CPF deve ser único no sistema
+    - Categoria deve existir previamente
+    - Centro de treinamento deve existir previamente
+    - Idade deve ser entre 1 e 149 anos
+    - Sexo deve ser 'M' ou 'F'
+    - Peso e altura devem ser valores positivos
+    
+    **Retorna:**
+    - Status 201: Atleta criado com sucesso
+    - Status 303: CPF já cadastrado
+    - Status 400: Categoria ou Centro de Treinamento não encontrados
+    - Status 422: Dados de entrada inválidos
+    """,
+    responses={
+        201: {"description": "Atleta criado com sucesso"},
+        303: {"description": "CPF já cadastrado"},
+        400: {"description": "Categoria ou Centro de Treinamento não encontrados"},
+        422: {"description": "Dados de entrada inválidos"}
+    }
 )
 async def post(
     db_session: AsyncSession = Depends(get_session),
@@ -83,6 +107,30 @@ async def post(
     summary='Consultar todos os atletas',
     status_code=status.HTTP_200_OK,
     response_model=Page[AtletaGetAll],
+    description="""
+    Lista todos os atletas cadastrados com suporte a filtros e paginação.
+    
+    **Filtros disponíveis:**
+    - `nome`: Busca parcial por nome (case insensitive)
+    - `cpf`: Busca exata por CPF
+    
+    **Paginação:**
+    - `page`: Número da página (padrão: 1)
+    - `size`: Itens por página (padrão: 50)
+    
+    **Resposta customizada:**
+    Retorna apenas nome, categoria e centro de treinamento (sem CPF, idade, peso, etc.)
+    
+    **Exemplos:**
+    - `/atletas/` - Lista todos
+    - `/atletas/?nome=João` - Filtra por nome
+    - `/atletas/?cpf=12345678900` - Busca por CPF
+    - `/atletas/?page=1&size=10` - Paginação
+    - `/atletas/?nome=Silva&page=2&size=5` - Filtro + paginação
+    """,
+    responses={
+        200: {"description": "Lista de atletas retornada com sucesso"}
+    }
 )
 async def query(
     db_session: AsyncSession = Depends(get_session),
@@ -116,6 +164,20 @@ async def query(
     summary='Consultar um atleta pelo id',
     status_code=status.HTTP_200_OK,
     response_model=AtletaOut,
+    description="""
+    Busca um atleta específico pelo ID.
+    
+    **Retorna:**
+    Todos os dados do atleta, incluindo CPF, idade, peso, altura, etc.
+    
+    **Diferença do GET all:**
+    Este endpoint retorna os dados completos do atleta,
+    enquanto o GET /atletas/ retorna apenas nome, categoria e centro de treinamento.
+    """,
+    responses={
+        200: {"description": "Atleta encontrado"},
+        404: {"description": "Atleta não encontrado"}
+    }
 )
 async def get(id: int, db_session: AsyncSession = Depends(get_session)) -> AtletaOut:
     atleta: AtletaModel = (

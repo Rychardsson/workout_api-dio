@@ -43,6 +43,45 @@ A API possui 3 entidades principais:
 - ✅ GET `/centros_treinamento/` - Listar todos os centros
 - ✅ GET `/centros_treinamento/{id}` - Buscar centro por ID
 
+### Melhorias Implementadas 🎯
+
+#### ✅ Validação Robusta
+- **Validação de CPF completa** com algoritmo oficial brasileiro
+- Validação de idade (1-149 anos)
+- Validação de sexo (apenas 'M' ou 'F')
+- Peso e altura com valores positivos
+
+#### ✅ Sistema de Exception Handlers
+- Tratamento global de erros
+- Mensagens de erro padronizadas e descritivas
+- Logging automático de exceções
+- Status codes apropriados (303, 400, 404, 422, 500)
+
+#### ✅ Logging Estruturado
+- Logs com timestamp e níveis (INFO, WARNING, ERROR)
+- Rastreamento de operações
+- Facilita debugging e monitoramento
+
+#### ✅ CORS Configurado
+- Pronto para integração com frontends
+- Configurável para ambientes de desenvolvimento e produção
+
+#### ✅ Testes Automatizados
+- **11 testes automatizados** cobrindo:
+  - Health check
+  - CRUD completo
+  - Validações de duplicação
+  - Filtros e paginação
+  - Responses customizados
+- Configuração com pytest e pytest-asyncio
+- Suporte a cobertura de código
+
+#### ✅ Documentação Aprimorada
+- Descrições detalhadas em todos os endpoints
+- Exemplos de uso no Swagger
+- Documentação de validações e status codes
+- Health check endpoint (`GET /`)
+
 ## Desafios Implementados
 
 ### 1. Query Parameters
@@ -198,6 +237,11 @@ make stop-docker         # Parar o banco de dados
 make create-migrations   # Criar nova migration
 make run-migrations      # Aplicar migrations
 make run                 # Executar a API
+make test                # Executar testes
+make test-cov            # Testes com cobertura de código
+make install             # Instalar dependências
+make install-dev         # Instalar dependências de desenvolvimento
+make clean               # Limpar arquivos cache
 ```
 
 ### Alembic Manual
@@ -262,10 +306,15 @@ workout_api-dio/
 - ✅ **Validação**: Pydantic v2 para validação de dados
 - ✅ **Migrations**: Alembic para versionamento do schema
 - ✅ **Paginação**: fastapi-pagination para resultados paginados
-- ✅ **Exception Handling**: Tratamento customizado de erros
+- ✅ **Exception Handling**: Tratamento customizado e global de erros
 - ✅ **Query Parameters**: Filtros dinâmicos nos endpoints
 - ✅ **Docker**: Containerização do PostgreSQL
 - ✅ **API Documentation**: Swagger automático com FastAPI
+- ✅ **Logging**: Sistema de logs estruturado
+- ✅ **CORS**: Middleware para integração com frontends
+- ✅ **Testes Automatizados**: Pytest com cobertura de código
+- ✅ **Validadores Customizados**: Validação de CPF brasileira
+- ✅ **Health Check**: Endpoint para monitoramento
 
 ## Configuração do Banco de Dados
 
@@ -280,3 +329,26 @@ Para alterar, edite o arquivo `.env` e o `docker-compose.yml` conforme necessár
 ## Licença
 
 Este projeto foi desenvolvido para fins educacionais.
+
+---
+
+## 📚 Documentação Adicional
+
+- **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Detalhes de todas as melhorias implementadas
+- **[IMPLEMENTATION_CHECKLIST.md](IMPLEMENTATION_CHECKLIST.md)** - Checklist completo de implementação
+- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** - Visão geral do projeto
+- **[SETUP_WINDOWS.md](SETUP_WINDOWS.md)** - Guia específico para Windows
+- **[EXAMPLES.md](EXAMPLES.md)** - Exemplos de todas as requisições
+
+## 🧪 Executar Testes
+
+```bash
+# Criar banco de teste
+docker exec -it workout_api_db psql -U workout -c "CREATE DATABASE workoutapi_test;"
+
+# Executar testes
+pytest tests/ -v
+
+# Com cobertura de código
+pytest tests/ -v --cov=workout_api --cov-report=html
+```
